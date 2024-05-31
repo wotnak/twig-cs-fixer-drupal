@@ -4,9 +4,9 @@
 
 ## Installation
 
-- Install [Twig CS Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer?tab=readme-ov-file#installation)
+- [Install Twig CS Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer?tab=readme-ov-file#installation)
 - `composer req --dev wotnak/twig-cs-fixer-drupal`
-- In your Twig CS Fixer configuration file enable reporting of non fixable rules and add the Drupal specific rules:
+- In your Twig CS Fixer [configuration file](https://github.com/VincentLanglet/Twig-CS-Fixer/blob/main/docs/configuration.md) enable reporting of non fixable rules and add the Drupal specific rules:
 
   ```php
   <?php
@@ -29,4 +29,4 @@
 
 ## Rules
 
-- [RequireComponentAttributesRule](src/Rules/Component/RequireComponentAttributesRule.php): ensures that main html tag of a component has attributes set using attributes prop.
+- [RequireComponentAttributesRule](src/Rules/Component/RequireComponentAttributesRule.php): ensures that main html tag of a component has attributes set using `attributes` prop.
