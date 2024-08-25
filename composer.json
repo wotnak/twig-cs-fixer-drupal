@@ -12,11 +12,5 @@
         "psr-4": {
             "TwigCsFixerDrupal\\": "src/"
         }
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "ergebnis/composer-normalize": true
-        }
     }
 }
