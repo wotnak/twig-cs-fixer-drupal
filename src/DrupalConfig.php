@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\TwigTransTokenParser;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use TwigCsFixer\Config\Config;
+use TwigCsFixer\Rules\Whitespace\IndentRule;
 use TwigCsFixer\Standard\TwigCsFixer;
 use TwigCsFixerDrupal\Rules\Component\RequireComponentAttributesRule;
 
@@ -47,6 +48,12 @@ class DrupalConfig {
     $ruleset = $config->getRuleset();
     $ruleset->addStandard(new TwigCsFixer());
 
+    // Configure indent rule to match .editorconfig settings from drupal/core.
+    // https://git.drupalcode.org/project/drupal/-/blob/11.x/.editorconfig?ref_type=heads
+    $ruleset->overrideRule(new IndentRule(
+      spaceRatio: 2,
+      useTab: FALSE,
+    ));
 
     // Add Drupal specific rules.
     $ruleset->addRule(new RequireComponentAttributesRule());
