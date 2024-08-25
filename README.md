@@ -10,21 +10,8 @@
 
   ```php
   <?php
-  // Load the default configuration.
-  $config = new \TwigCsFixer\Config\Config();
-
-  // Enable reporting of non-fixable rules.
-  $config->allowNonFixableRules();
-
-  // Load default ruleset.
-  $ruleset = new \TwigCsFixer\Ruleset\Ruleset();
-
-  // Add custom rules.
-  $ruleset->addRule(new \TwigCsFixerDrupal\Rules\Component\RequireComponentAttributesRule());
-  // ...
-
-  $config->setRuleset($ruleset);
-  return $config;
+  // Load Drupal TwigCsFixer configuration.
+  return \TwigCsFixerDrupal\DrupalConfig::getConfig();
   ```
 
 ## Rules
