@@ -8,7 +8,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\TwigTransTokenParser;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use TwigCsFixer\Config\Config;
-use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Standard\TwigCsFixer;
 use TwigCsFixerDrupal\Rules\Component\RequireComponentAttributesRule;
 
@@ -48,10 +47,6 @@ class DrupalConfig {
     $ruleset = $config->getRuleset();
     $ruleset->addStandard(new TwigCsFixer());
 
-    // Use camelCase for variable names.
-    $ruleset->overrideRule(new VariableNameRule(
-      case: VariableNameRule::CAMEL_CASE,
-    ));
 
     // Add Drupal specific rules.
     $ruleset->addRule(new RequireComponentAttributesRule());
