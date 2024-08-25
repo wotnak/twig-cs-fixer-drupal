@@ -18,24 +18,63 @@ final class RequireComponentAttributesRule extends AbstractRule {
    * {@inheritdoc}
    */
   protected function process(int $tokenIndex, Tokens $tokens): void {
+    // Run this check only once per file.
+    if (0 !== $tokenIndex) {
+      return;
+    }
+    // Run this check only for SDC templates.
+    if (!Utils::isInComponentTemplate($tokens->get($tokenIndex))) {
+      return;
+    }
+
+    // Find the first html tag opening.
+    $hasHtmlTag = FALSE;
     $tokens = $tokens->toArray();
-    $currentToken = $tokens[$tokenIndex];
-    if (!Utils::isInComponentTemplate($currentToken)) {
-      return;
-    }
+    $skip = FALSE;
+    $inBlockDef = FALSE;
 
-    // Make sure current token is a html tag opening.
-    if (!$this->isHtmlTagOpeningStart($currentToken)) {
-      return;
-    }
-
-    // Make sure current token is the first html tag opening.
-    $previousTokens = array_slice($tokens, 0, $tokenIndex);
-    foreach ($previousTokens as $token) {
-      if ($this->isHtmlTagOpeningStart($token)) {
-        // Current token is not the first html tag opening.
-        return;
+    foreach ($tokens as $i => $token) {
+      // Skip comments.
+      if ($token->isMatching(Token::COMMENT_START_TYPE)) {
+        $skip = TRUE;
+        continue;
       }
+      if ($skip) {
+        if ($token->isMatching(Token::COMMENT_END_TYPE)) {
+          $skip = FALSE;
+        }
+        continue;
+      }
+      // Skip macros.
+      if ($token->isMatching(Token::BLOCK_START_TYPE)) {
+        $inBlockDef = TRUE;
+      }
+      if ($inBlockDef && $token->isMatching(Token::BLOCK_NAME_TYPE, 'macro')) {
+        $skip = TRUE;
+        continue;
+      }
+      if ($inBlockDef && $token->isMatching(Token::BLOCK_NAME_TYPE, 'endmacro')) {
+        $skip = FALSE;
+        continue;
+      }
+      if ($inBlockDef && $token->isMatching(Token::BLOCK_END_TYPE)) {
+        $inBlockDef = FALSE;
+        continue;
+      }
+      if ($token->isMatching(Token::BLOCK_END_TYPE)) {
+        $inBlockDef = TRUE;
+        continue;
+      }
+
+      if ($this->isHtmlTagOpeningStart($token)) {
+        $tokenIndex = $i;
+        $hasHtmlTag = TRUE;
+        break;
+      }
+    }
+
+    if (!$hasHtmlTag) {
+      return;
     }
 
     // Find tokens of the first html tag opening.
@@ -62,7 +101,7 @@ final class RequireComponentAttributesRule extends AbstractRule {
     }
 
     if (!$hasAttributes) {
-      $this->addError('Component\'s main html tag must have attributes set using attributes prop.', $currentToken);
+      $this->addError('Component\'s main html tag must have attributes set using attributes prop.', $tokens[$tokenIndex]);
     }
   }
 
