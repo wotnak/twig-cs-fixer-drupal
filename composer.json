@@ -6,10 +6,7 @@
     "require": {
         "php": ">=8.3",
         "vincentlanglet/twig-cs-fixer": "^2.0.0"
-    },
-    "require-dev": {
-        "ergebnis/composer-normalize": "^2.42",
-        "smartbees/coding-standards-drupal": "^2.2"
+        "vincentlanglet/twig-cs-fixer": "^3.0.2"
     },
     "autoload": {
         "psr-4": {
@@ -21,10 +18,5 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true
         }
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "composer normalize"
-        ]
     }
 }

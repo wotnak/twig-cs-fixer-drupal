@@ -6,6 +6,7 @@ namespace TwigCsFixerDrupal\Rules\Component;
 
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use TwigCsFixerDrupal\Utils;
 
 /**
@@ -16,8 +17,9 @@ final class RequireComponentAttributesRule extends AbstractRule {
   /**
    * {@inheritdoc}
    */
-  protected function process(int $tokenPosition, array $tokens): void {
-    $currentToken = $tokens[$tokenPosition];
+  protected function process(int $tokenIndex, Tokens $tokens): void {
+    $tokens = $tokens->toArray();
+    $currentToken = $tokens[$tokenIndex];
     if (!Utils::isInComponentTemplate($currentToken)) {
       return;
     }
@@ -28,7 +30,7 @@ final class RequireComponentAttributesRule extends AbstractRule {
     }
 
     // Make sure current token is the first html tag opening.
-    $previousTokens = array_slice($tokens, 0, $tokenPosition);
+    $previousTokens = array_slice($tokens, 0, $tokenIndex);
     foreach ($previousTokens as $token) {
       if ($this->isHtmlTagOpeningStart($token)) {
         // Current token is not the first html tag opening.
@@ -37,7 +39,7 @@ final class RequireComponentAttributesRule extends AbstractRule {
     }
 
     // Find tokens of the first html tag opening.
-    $htmlTagOpeningStart = $tokenPosition;
+    $htmlTagOpeningStart = $tokenIndex;
     $htmlTagOpeningEnd = NULL;
     $htmlTagOpeningTokens = array_slice($tokens, $htmlTagOpeningStart);
     foreach ($htmlTagOpeningTokens as $index => $token) {
@@ -53,7 +55,7 @@ final class RequireComponentAttributesRule extends AbstractRule {
     // Check if html tag has attributes set using attributes prop.
     $hasAttributes = FALSE;
     foreach ($htmlTagOpeningTokens as $token) {
-      if ($this->isTokenMatching($token, Token::NAME_TYPE, "attributes")) {
+      if ($token->isMatching(Token::NAME_TYPE, "attributes")) {
         $hasAttributes = TRUE;
         break;
       }
